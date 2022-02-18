@@ -1,0 +1,48 @@
+//koduarvutis ei läinud ei intellij ega git tööle, seega see nädal esitan kodutöö txt vormis. loodan, et sobib. järgmiseks nädalaks proovin teise arvuti peal korda saada.
+//näiteandmeteks on inimeste palgad, programm leiab arit. keskmise, standardhälve ja leiab keskmisest kõige kaugel olevamad andmed
+public class Main
+{
+    public static void main(String[] args){
+        float[] list = {550,750,80,1100,1000,830,1800,700,1650,1250};
+        float keskmine = keskväärtus(list);
+        float stHälve = sh(list, keskmine);
+        float[] smoothList = eemaldaOutlier(list, stHälve, keskmine);
+        System.out.println("Keskväärtus " + keskmine + ", standardhälve "+ stHälve);
+        System.out.print("List elementidega, mis on standardhälbe vahemikus: ");
+        for (int i = 0; i < smoothList.length; i++) {
+            System.out.print(smoothList[i] + " ");
+        }
+    }
+    //leian listi keskväärtuse; statistikas nim ka aritmeetiliseks keskmiseks 
+    public static float keskväärtus(float[] numList) {
+        float summa = 0;
+        for (int i = 0; i < numList.length; i++) {
+            summa += numList[i];
+        }
+        float avg = summa/numList.length;
+        return avg;
+    }
+    //leian standardhälve (sh); statistikas kasutatakse, et leida tunnuse hajuvust keskmise ümber; on täpsem kui arit. keskmine
+    public static float sh(float[] numList, float am) {
+        float summa = 0;
+        for (int i = 0; i < numList.length; i++) {
+            summa += Math.pow(numList[i]-am, 2);
+        }
+        double sqKesk = summa/numList.length;
+        double rSqKesk = Math.sqrt(sqKesk);
+        float ruut = (float)rSqKesk;
+        float sh = Math.abs(ruut);
+        return sh;
+    }
+    //leiab keskmisest kõige kaugemal olevad andmed (rohkem kui ühe standardhälbe kaugusel) ja asendab need keskmisega; statistikas kasutatakse, et saada täpsemaid tulemusi ja eemaldada vead andmete kogumisel (näiteandmetes nt 80)
+    public static float[] eemaldaOutlier(float[] numList, float aritMediaan, float sh) {
+        float[] smList = numList;
+        for (int i = 0; i < numList.length; i++) {
+            float num = numList[i];
+            if (Math.abs(aritMediaan - numList[i]) > sh) {
+                smList[i] = aritMediaan;
+            }
+        }
+        return smList;
+    } 
+}
